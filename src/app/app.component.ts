@@ -1,6 +1,8 @@
 import { Component} from '@angular/core';
 import * as XLSX from 'xlsx'; 
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,22 +10,21 @@ import * as XLSX from 'xlsx';
 export class AppComponent {
   title = 'quickorder-technical-task';
 
-  public records: any[] = [];
+  public records: any[] = []
   public sheets: any[] = [];
   public workbook: any = [];
 
-  uploadFile($event: any): void {
+  uploadFile($event: Event): void {
 
-    const files = $event.srcElement.files;
-    const input = $event.target;
+    const files = ($event.target as HTMLInputElement).files!;
     const reader = new FileReader();
     
     if (this.isCSVFile(files[0])){
 
-      reader.readAsText(input.files[0]);
+      reader.readAsText(files[0]);
       reader.onload = () => {
-        const data: string | ArrayBuffer | null = reader.result;
-        this.records = this.csvFileToJSON(<string> data);
+        const data = reader.result as string;
+        this.records = this.csvFileToJSON(data) as unknown as Object[];
       };
     }
 
@@ -34,8 +35,7 @@ export class AppComponent {
         const data = reader.result;
         const workbook = XLSX.read(data, {type: 'binary'});
         this.workbook = workbook;
-        const sheet = workbook.SheetNames;
-        this.sheets = sheet;
+        this.sheets = workbook.SheetNames;
         this.getSheet(workbook.SheetNames[0])
       }
     }
@@ -46,23 +46,25 @@ export class AppComponent {
     this.records = XLSX.utils.sheet_to_json(worksheet,{raw:true});
   }
 
-  getKeys(jsonObject:any) {
-    return (jsonObject && jsonObject.length > 0) ? Object.keys(jsonObject[0]) : [];
+  getKeys(object:any) {
+    return (object) ? Object.keys(object[0]) : [];
   }
 
-  csvFileToJSON(file:string){
+  csvFileToJSON(data:string){
+    const lines = data.split("\n");
+    const headers = lines[0].split(",");
 
-    const lines = file.split("\n");
-    const headers = <any>lines[0].split(",");
+    let result = lines.map((line:string) => {
+      var obj:any = [];
+      var currentline=line.split(",");
 
-    return new Array(lines.map((l:string) => {
-      const obj:Array<string> = [];
-      const currentline = l.split(",");
+      for(var j=0;j<headers.length;j++){
+        obj[headers[j]] = currentline[j];
+      }
+      return obj;
+    })
 
-      headers.map((e:string, i:number) => {
-        obj[headers[i]] = currentline[i]; // did not have time to consider a more type friendly way of handling this case
-      })
-    }))
+    return result;
   }
 
   isCSVFile(file: File) {
