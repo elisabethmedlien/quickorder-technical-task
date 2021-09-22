@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  padding: 25px 45px;
+}
+
+input#upload {
+  margin: 15px 0;
+  margin:auto;
+  text-align: center;
+}
+
+input[type="file" i]::-webkit-file-upload-button {
+  background: #00bcd4;
+	color: white;
+	border: none;
+  border-radius: 5px;
+	padding: 5px 10px;
+	font: inherit;
+  font-size: 16px;
+	cursor: pointer;
+	outline: inherit;
+
+}
+
+table {
+  margin: 15px 0;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+table thead tr {
+  background-color: pink;
+}
+
+table th {
+  padding: 6px 7px;
+}
+
+table td {
+  padding: 3px 7px;
+}
+
+table tbody tr {
+  border-bottom: 0.3px solid #e8e8e8;
+}
+
+ul {
+  padding: 0;
+  text-align: center;
+}
+
+li {
+  display: inline-block;
+  list-style: none;
+  padding: 3px 7px;
+  cursor: pointer;
+}
