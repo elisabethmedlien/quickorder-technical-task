@@ -54,8 +54,10 @@ export class AppComponent {
     const lines = data.split("\n");
     const headers = lines[0].split(",");
 
-    let result = lines.map((line:string) => {
-      var obj:any = [];
+    let result = lines
+    .filter((_:string, index:number)=> { return index > 0 })
+    .map((line:string) => {
+      const obj:any = [];
       var currentline=line.split(",");
 
       for(var j=0;j<headers.length;j++){
